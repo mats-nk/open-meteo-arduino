@@ -2,23 +2,27 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
-void getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink)
+bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink)
 {
     String url = "http://api.open-meteo.com/v1/forecast?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink;
+#if OM_LOGS_ENABLED
+    Serial.println("Final hourly url: " + url);
+#endif
     String jsonString = getStringRequest(url);
     JsonDocument jsonDoc;
     DeserializationError error = deserializeJson(jsonDoc, jsonString);
 
-#ifdef OM_LOGS_ENABLED
-    if (error)
-    {
-        Serial.print("deserializeJson() returned ");
-        Serial.println(error.c_str());
-        return;
-    }
+#if OM_LOGS_ENABLED
+    Serial.print("deserializeJson() returned: ");
+    Serial.println(error.c_str());
 #endif
 
-    for (size_t i = 0; i < MAX_HOURS; i++)
+    if (error.code() != DeserializationError::Ok)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
         structure->hourly_time[i] = jsonDoc["hourly"]["time"][i];
         structure->temp[i] = jsonDoc["hourly"]["temperature_2m"][i];
@@ -34,12 +38,13 @@ void getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
         structure->wind_gust[i] = jsonDoc["hourly"]["wind_gusts_10m"][i];
         structure->is_day[i] = jsonDoc["hourly"]["is_day"][i];
     }
-    for (size_t i = 0; i < MAX_DAYS; i++)
+    for (size_t i = 0; i < OM_WEATHER_MAX_DAYS; i++)
     {
         structure->daily_time[i] = jsonDoc["daily"]["time"][i];
         structure->sunrise[i] = jsonDoc["daily"]["sunrise"][i];
         structure->sunset[i] = jsonDoc["daily"]["sunset"][i];
     }
+    return true;
 }
 
 void getDailyForecast(OM_DailyForecast *structure, float latitude, float longitude, String apiLink)
@@ -58,7 +63,7 @@ void getDailyForecast(OM_DailyForecast *structure, float latitude, float longitu
     }
 #endif
 
-    for (size_t i = 0; i < MAX_DAYS; i++)
+    for (size_t i = 0; i < OM_WEATHER_MAX_DAYS; i++)
     {
         structure->daily_time[i] = jsonDoc["daily"]["time"][i];
         structure->weather_code[i] = jsonDoc["daily"]["weather_code"][i];
@@ -121,7 +126,7 @@ void getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, flo
     }
 #endif
 
-    for (size_t i = 0; i < MAX_HOURS_AIR_QUALITY; i++)
+    for (size_t i = 0; i < OM_AIR_QUALITY_MAX_HOURS; i++)
     {
         structure->time[i] = jsonDoc["hourly"]["time"][i];
         structure->EU_AQI[i] = jsonDoc["hourly"]["european_aqi"][i];
@@ -154,26 +159,25 @@ String getStringRequest(String url)
     HTTPClient http;
 
     http.begin(client, url);
+    http.setTimeout(17500);
+    http.setConnectTimeout(17500);
 
+    // Error codes are here: /home/szybet/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src/HTTPClient.h
     int httpResponseCode = http.GET();
 
     String payload = "{}";
 
+#if OM_LOGS_ENABLED
+        Serial.println("Error code: " + String(httpResponseCode));
+#endif
+
     if (httpResponseCode > 0)
     {
-#ifdef OM_LOGS_ENABLED
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
-#endif
         payload = http.getString();
+    } else {
+        payload = "";
     }
-    else
-    {
-#ifdef OM_LOGS_ENABLED
-        Serial.print("Error code: ");
-        Serial.println(httpResponseCode);
-#endif
-    }
+
     // Free resources
     http.end();
 

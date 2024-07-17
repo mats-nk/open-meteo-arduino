@@ -4,13 +4,13 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 
-#define MAX_HOURS 167
-#define MAX_DAYS 7
+#define OM_WEATHER_MAX_DAYS 16
+#define OM_WEATHER_MAX_HOURS OM_WEATHER_MAX_DAYS * 24
 
-#define MAX_HOURS_AIR_QUALITY 119
+#define OM_AIR_QUALITY_MAX_DAYS 7
+#define OM_AIR_QUALITY_MAX_HOURS OM_AIR_QUALITY_MAX_DAYS * 24
 
-
-#define OM_LOGS_ENABLED
+#define OM_LOGS_ENABLED 1
 
 String getStringRequest(String url);
 
@@ -19,55 +19,55 @@ typedef struct OM_HourlyForecast
 {
     // Hourly
 
-    time_t hourly_time[MAX_HOURS] = {0};
+    time_t hourly_time[OM_WEATHER_MAX_HOURS] = {0};
 
-    float temp[MAX_HOURS] = {0};
-    uint8_t humidity[MAX_HOURS] = {0};
-    float apparent_temp[MAX_HOURS] = {0};
+    float temp[OM_WEATHER_MAX_HOURS] = {0};
+    uint8_t humidity[OM_WEATHER_MAX_HOURS] = {0};
+    float apparent_temp[OM_WEATHER_MAX_HOURS] = {0};
 
-    float pressure[MAX_HOURS] = {0};
+    float pressure[OM_WEATHER_MAX_HOURS] = {0};
 
-    uint8_t precipitation[MAX_HOURS] = {0};
-    uint8_t cloud_cover[MAX_HOURS] = {0};
-    uint16_t visibility[MAX_HOURS] = {0};
+    uint8_t precipitation[OM_WEATHER_MAX_HOURS] = {0};
+    uint8_t cloud_cover[OM_WEATHER_MAX_HOURS] = {0};
+    uint16_t visibility[OM_WEATHER_MAX_HOURS] = {0};
 
-    float wind_speed[MAX_HOURS] = {0};
-    uint16_t wind_deg[MAX_HOURS] = {0};
-    float wind_gust[MAX_HOURS] = {0};
+    float wind_speed[OM_WEATHER_MAX_HOURS] = {0};
+    uint16_t wind_deg[OM_WEATHER_MAX_HOURS] = {0};
+    float wind_gust[OM_WEATHER_MAX_HOURS] = {0};
 
-    uint8_t weather_code[MAX_HOURS] = {0};
+    uint8_t weather_code[OM_WEATHER_MAX_HOURS] = {0};
 
-    bool is_day[MAX_HOURS] = {0};
+    bool is_day[OM_WEATHER_MAX_HOURS] = {0};
 
     // Daily
-    time_t daily_time[MAX_DAYS] = {0};
+    time_t daily_time[OM_WEATHER_MAX_DAYS] = {0};
 
-    uint32_t sunrise[MAX_DAYS] = {0};
-    uint32_t sunset[MAX_DAYS] = {0};
+    uint32_t sunrise[OM_WEATHER_MAX_DAYS] = {0};
+    uint32_t sunset[OM_WEATHER_MAX_DAYS] = {0};
 
 } OM_HourlyForecast;
 
 typedef struct OM_DailyForecast
 {
-    time_t daily_time[MAX_DAYS] = {0};
+    time_t daily_time[OM_WEATHER_MAX_DAYS] = {0};
 
-    uint8_t weather_code[MAX_DAYS] = {0};
+    uint8_t weather_code[OM_WEATHER_MAX_DAYS] = {0};
 
-    float temp_max[MAX_DAYS] = {0};
-    float temp_min[MAX_DAYS] = {0};
+    float temp_max[OM_WEATHER_MAX_DAYS] = {0};
+    float temp_min[OM_WEATHER_MAX_DAYS] = {0};
 
-    float apparent_temp_max[MAX_DAYS] = {0};
-    float apparent_temp_min[MAX_DAYS] = {0};
+    float apparent_temp_max[OM_WEATHER_MAX_DAYS] = {0};
+    float apparent_temp_min[OM_WEATHER_MAX_DAYS] = {0};
 
-    uint32_t sunrise[MAX_DAYS] = {0};
-    uint32_t sunset[MAX_DAYS] = {0};
+    uint32_t sunrise[OM_WEATHER_MAX_DAYS] = {0};
+    uint32_t sunset[OM_WEATHER_MAX_DAYS] = {0};
 
-    uint8_t precipitation_max[MAX_DAYS] = {0};
-    uint8_t precipitation_hours[MAX_DAYS] = {0};
+    uint8_t precipitation_max[OM_WEATHER_MAX_DAYS] = {0};
+    uint8_t precipitation_hours[OM_WEATHER_MAX_DAYS] = {0};
 
-    float wind_speed_max[MAX_DAYS] = {0};
-    float wind_gust_max[MAX_DAYS] = {0};
-    uint16_t wind_deg_dominant[MAX_DAYS] = {0};
+    float wind_speed_max[OM_WEATHER_MAX_DAYS] = {0};
+    float wind_gust_max[OM_WEATHER_MAX_DAYS] = {0};
+    uint16_t wind_deg_dominant[OM_WEATHER_MAX_DAYS] = {0};
 
 } OM_DailyForecast;
 
@@ -94,9 +94,8 @@ typedef struct OM_CurrentWeather
 
 typedef struct OM_AirQualityForecast
 {
-    time_t time[MAX_HOURS_AIR_QUALITY] = {0};
-    uint8_t EU_AQI[MAX_HOURS_AIR_QUALITY] = {0};
-
+    time_t time[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint8_t EU_AQI[OM_AIR_QUALITY_MAX_HOURS] = {0};
 } OM_AirQualityForecast;
 
 typedef struct OM_CurrentAirQuality
@@ -105,11 +104,11 @@ typedef struct OM_CurrentAirQuality
     uint8_t EU_AQI = 0;
 } OM_CurrentAirQuality;
 
-#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto"
+#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16"
 
-void getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink = HOURLY_API_LINK);
+bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink = HOURLY_API_LINK);
 
-#define DAILY_API_LINK "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto"
+#define DAILY_API_LINK "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto&forecast_days=16"
 
 void getDailyForecast(OM_DailyForecast *structure, float latitude, float longitude, String apiLink = DAILY_API_LINK);
 
@@ -124,6 +123,5 @@ void getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, flo
 #define AIR_CURRENT_API_LINK "&current=european_aqi&timeformat=unixtime&timezone=auto"
 
 void getCurrentAirQuality(OM_CurrentAirQuality *structure, float latitude, float longitude, String apiLink);
-
 
 #endif
