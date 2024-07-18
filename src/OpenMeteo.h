@@ -4,13 +4,13 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 
-#define OM_WEATHER_MAX_DAYS 16
+#define OM_WEATHER_MAX_DAYS 1
 #define OM_WEATHER_MAX_HOURS OM_WEATHER_MAX_DAYS * 24
 
-#define OM_AIR_QUALITY_MAX_DAYS 7
+#define OM_AIR_QUALITY_MAX_DAYS 1
 #define OM_AIR_QUALITY_MAX_HOURS OM_AIR_QUALITY_MAX_DAYS * 24
 
-#define OM_LOGS_ENABLED 1
+#define OM_LOGS_ENABLED 0
 
 String getStringRequest(String url);
 
@@ -46,6 +46,8 @@ typedef struct OM_HourlyForecast
     uint32_t sunset[OM_WEATHER_MAX_DAYS] = {0};
 
 } OM_HourlyForecast;
+
+/*
 
 typedef struct OM_DailyForecast
 {
@@ -103,11 +105,12 @@ typedef struct OM_CurrentAirQuality
     time_t time = 0;
     uint8_t EU_AQI = 0;
 } OM_CurrentAirQuality;
+*/
+#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto"
 
-#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16"
+bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink = HOURLY_API_LINK);
 
-bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink = HOURLY_API_LINK);
-
+/*
 #define DAILY_API_LINK "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto&forecast_days=16"
 
 void getDailyForecast(OM_DailyForecast *structure, float latitude, float longitude, String apiLink = DAILY_API_LINK);
@@ -123,5 +126,6 @@ void getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, flo
 #define AIR_CURRENT_API_LINK "&current=european_aqi&timeformat=unixtime&timezone=auto"
 
 void getCurrentAirQuality(OM_CurrentAirQuality *structure, float latitude, float longitude, String apiLink);
+*/
 
 #endif

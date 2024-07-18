@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "OpenMeteo.h"
+#include <NTPClient.h>
 
 // Replace with your own network credentials
 const char *ssid = "hotspot";
@@ -8,7 +9,6 @@ const char *password = "12345678";
 
 void setup()
 {
-
     Serial.begin(115200);
 
     WiFi.mode(WIFI_STA);
@@ -31,8 +31,17 @@ OM_HourlyForecast *forecast = NULL;
 void loop()
 {
     delay(1000);
+    WiFiUDP ntpUDP;
+    NTPClient timeClient(ntpUDP);
+    timeClient.begin();
+    if (timeClient.forceUpdate() == false)
+    {
+        Serial.println("Failed to get ntp time");
+    }
+    time_t epochTime = timeClient.getEpochTime();
+    Serial.println("Unix time: " + String(epochTime));
     forecast = new OM_HourlyForecast;
-    bool status = getHourlyForecast(forecast, 53.55073, 9.99302);
+    bool status = getHourlyForecast(forecast, 53.55073, 9.99302, epochTime);
     delay(1000);
     if (status == true)
     {
@@ -66,7 +75,9 @@ void loop()
             Serial.print(", sunrise: " + String(forecast->sunrise[i]));
             Serial.println(", sunset: " + String(forecast->sunset[i]));
         }
-    } else {
+    }
+    else
+    {
         Serial.println("Failed to get weather forecast");
     }
     delete forecast;

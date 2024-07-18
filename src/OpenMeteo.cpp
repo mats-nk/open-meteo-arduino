@@ -1,10 +1,26 @@
 #include "OpenMeteo.h"
 #include <Arduino.h>
 #include <WiFi.h>
+#include <time.h>
+#include <TimeLib.h>
 
-bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, String apiLink)
+// &start_date=2024-07-17&end_date=2024-07-17
+String unixToDate(uint64_t unixTime)
 {
-    String url = "http://api.open-meteo.com/v1/forecast?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink;
+  int gotDay = day(unixTime);
+  int gotMonth = month(unixTime);
+  int gotYear = year(unixTime);
+
+  char dateString[11];
+  sprintf(dateString, "%04d-%02d-%02d", gotYear, gotMonth, gotDay);
+
+  return String(dateString);
+}
+
+bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink)
+{
+    String date = unixToDate(unixTime);
+    String url = "http://api.open-meteo.com/v1/forecast?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink + "&start_date=" + date + "&end_date=" + date;
 #if OM_LOGS_ENABLED
     Serial.println("Final hourly url: " + url);
 #endif
@@ -47,6 +63,7 @@ bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
     return true;
 }
 
+/*
 void getDailyForecast(OM_DailyForecast *structure, float latitude, float longitude, String apiLink)
 {
     String url = "http://api.open-meteo.com/v1/forecast?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink;
@@ -152,6 +169,7 @@ void getCurrentAirQuality(OM_CurrentAirQuality *structure, float latitude, float
     structure->time = jsonDoc["hourly"]["time"];
     structure->EU_AQI = jsonDoc["hourly"]["european_aqi"];
 }
+*/
 
 String getStringRequest(String url)
 {
