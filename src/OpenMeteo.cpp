@@ -5,7 +5,7 @@
 #include <TimeLib.h>
 
 // &start_date=2024-07-17&end_date=2024-07-17
-String unixToDate(uint64_t unixTime)
+String unixToDateOM(uint64_t unixTime)
 {
   int gotDay = day(unixTime);
   int gotMonth = month(unixTime);
@@ -19,7 +19,7 @@ String unixToDate(uint64_t unixTime)
 
 bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink)
 {
-    String date = unixToDate(unixTime);
+    String date = unixToDateOM(unixTime);
     String url = "http://api.open-meteo.com/v1/forecast?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink + "&start_date=" + date + "&end_date=" + date;
 #if OM_LOGS_ENABLED
     Serial.println("Final hourly url: " + url);
