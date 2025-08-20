@@ -44,6 +44,11 @@ typedef struct OM_HourlyForecast
 
     uint32_t sunrise[OM_WEATHER_MAX_DAYS] = {0};
     uint32_t sunset[OM_WEATHER_MAX_DAYS] = {0};
+    float wet_bulb_temperature_2m[OM_WEATHER_MAX_HOURS] = {0}; // New field
+    float cape[OM_WEATHER_MAX_HOURS] = {0};                    // New field
+    float sunshine_duration[OM_WEATHER_MAX_DAYS] = {0};        // New field
+    float uv_index[OM_WEATHER_MAX_HOURS] = {0};                // Add this
+    float uv_index_clear_sky[OM_WEATHER_MAX_HOURS] = {0};      // Add this
 
 } OM_HourlyForecast;
 
@@ -106,9 +111,26 @@ typedef struct OM_CurrentAirQuality
     uint8_t EU_AQI = 0;
 } OM_CurrentAirQuality;
 */
-#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto"
+
+typedef struct OM_AirQualityForecast
+{
+    time_t hourly_time[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t us_aqi[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi_pm2_5[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi_pm10[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi_nitrogen_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi_ozone[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    uint16_t european_aqi_sulphur_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+} OM_AirQualityForecast;
+
+#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day,wet_bulb_temperature_2m,cape,uv_index,uv_index_clear_sky&daily=sunrise,sunset,sunshine_duration&timeformat=unixtime&timezone=auto"
 
 bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink = HOURLY_API_LINK);
+
+#define AIR_HOURLY_API_LINK "&hourly=european_aqi,european_aqi_pm2_5,european_aqi_pm10,us_aqi,european_aqi_nitrogen_dioxide,european_aqi_ozone,european_aqi_sulphur_dioxide&timeformat=unixtime&timezone=auto"
+
+bool getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink = AIR_HOURLY_API_LINK);
 
 /*
 #define DAILY_API_LINK "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto&forecast_days=16"
