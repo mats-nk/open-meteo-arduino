@@ -7,14 +7,14 @@
 // &start_date=2024-07-17&end_date=2024-07-17
 String unixToDateOM(uint64_t unixTime)
 {
-  int gotDay = day(unixTime);
-  int gotMonth = month(unixTime);
-  int gotYear = year(unixTime);
+    int gotDay = day(unixTime);
+    int gotMonth = month(unixTime);
+    int gotYear = year(unixTime);
 
-  char dateString[11];
-  sprintf(dateString, "%04d-%02d-%02d", gotYear, gotMonth, gotDay);
+    char dateString[11];
+    sprintf(dateString, "%04d-%02d-%02d", gotYear, gotMonth, gotDay);
 
-  return String(dateString);
+    return String(dateString);
 }
 
 bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink)
@@ -53,12 +53,53 @@ bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
         structure->wind_deg[i] = jsonDoc["hourly"]["wind_direction_10m"][i];
         structure->wind_gust[i] = jsonDoc["hourly"]["wind_gusts_10m"][i];
         structure->is_day[i] = jsonDoc["hourly"]["is_day"][i];
+        structure->wet_bulb_temperature_2m[i] = jsonDoc["hourly"]["wet_bulb_temperature_2m"][i]; // New
+        structure->cape[i] = jsonDoc["hourly"]["cape"][i];
+        structure->uv_index[i] = jsonDoc["hourly"]["uv_index"][i];                     // Add this
+        structure->uv_index_clear_sky[i] = jsonDoc["hourly"]["uv_index_clear_sky"][i]; // Add this
     }
     for (size_t i = 0; i < OM_WEATHER_MAX_DAYS; i++)
     {
         structure->daily_time[i] = jsonDoc["daily"]["time"][i];
         structure->sunrise[i] = jsonDoc["daily"]["sunrise"][i];
         structure->sunset[i] = jsonDoc["daily"]["sunset"][i];
+        structure->sunshine_duration[i] = jsonDoc["daily"]["sunshine_duration"][i]; // New
+    }
+    return true;
+}
+
+bool getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink)
+{
+    String date = unixToDateOM(unixTime);
+    String url = "http://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + String(latitude) + "&longitude=" + String(longitude) + apiLink + "&start_date=" + date + "&end_date=" + date;
+
+#if OM_LOGS_ENABLED
+    Serial.println("Final hourly url: " + url);
+#endif
+    String jsonString = getStringRequest(url);
+    JsonDocument jsonDoc;
+    DeserializationError error = deserializeJson(jsonDoc, jsonString);
+
+#if OM_LOGS_ENABLED
+    Serial.print("deserializeJson() returned: ");
+    Serial.println(error.c_str());
+#endif
+
+    if (error.code() != DeserializationError::Ok)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < OM_AIR_QUALITY_MAX_HOURS; i++)
+    {
+        structure->hourly_time[i] = jsonDoc["hourly"]["time"][i];
+        structure->european_aqi[i] = jsonDoc["hourly"]["european_aqi"][i];
+        structure->us_aqi[i] = jsonDoc["hourly"]["us_aqi"][i];
+        structure->european_aqi_pm2_5[i] = jsonDoc["hourly"]["european_aqi_pm2_5"][i];
+        structure->european_aqi_pm10[i] = jsonDoc["hourly"]["european_aqi_pm10"][i];
+        structure->european_aqi_nitrogen_dioxide[i] = jsonDoc["hourly"]["european_aqi_nitrogen_dioxide"][i];
+        structure->european_aqi_ozone[i] = jsonDoc["hourly"]["european_aqi_ozone"][i];
+        structure->european_aqi_sulphur_dioxide[i] = jsonDoc["hourly"]["european_aqi_sulphur_dioxide"][i];
     }
     return true;
 }
@@ -186,13 +227,15 @@ String getStringRequest(String url)
     String payload = "{}";
 
 #if OM_LOGS_ENABLED
-        Serial.println("Error code: " + String(httpResponseCode));
+    Serial.println("Error code: " + String(httpResponseCode));
 #endif
 
     if (httpResponseCode > 0)
     {
         payload = http.getString();
-    } else {
+    }
+    else
+    {
         payload = "";
     }
 
