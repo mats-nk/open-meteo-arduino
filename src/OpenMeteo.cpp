@@ -65,7 +65,7 @@ bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
         structure->evapotranspiration[i] = jsonDoc["hourly"]["evapotranspiration"][i];
         structure->lifted_index[i] = jsonDoc["hourly"]["lifted_index"][i];
         structure->convective_inhibition[i] = jsonDoc["hourly"]["convective_inhibition"][i];
-        structure->precipitation_probability[i] = jsonDoc["hourly"]["precipitation_probability"][i];
+        structure->precipitation_amount[i] = jsonDoc["hourly"]["precipitation"][i];
         structure->terrestrial_radiation[i] = jsonDoc["hourly"]["terrestrial_radiation"][i];
         structure->global_tilted_irradiance[i] = jsonDoc["hourly"]["global_tilted_irradiance"][i];
         structure->direct_normal_irradiance[i] = jsonDoc["hourly"]["direct_normal_irradiance"][i];

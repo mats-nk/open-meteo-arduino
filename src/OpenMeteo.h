@@ -53,7 +53,7 @@ typedef struct OM_HourlyForecast
     float evapotranspiration[OM_WEATHER_MAX_HOURS] = {0};
     float lifted_index[OM_WEATHER_MAX_HOURS] = {0};
     float convective_inhibition[OM_WEATHER_MAX_HOURS] = {0};
-    float precipitation_probability[OM_WEATHER_MAX_HOURS] = {0};
+    float precipitation_amount[OM_WEATHER_MAX_HOURS] = {0};
 
     float terrestrial_radiation[OM_WEATHER_MAX_HOURS] = {0};
     float global_tilted_irradiance[OM_WEATHER_MAX_HOURS] = {0};
