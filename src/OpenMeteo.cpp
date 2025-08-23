@@ -61,17 +61,17 @@ bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
 
         structure->dew_point[i] = jsonDoc["hourly"]["dew_point_2m"][i];
         structure->snow_depth[i] = jsonDoc["hourly"]["snow_depth"][i];
-        structure->vapour_pressure_deficit[i] = jsonDoc["hourly"]["vapour_pressure_deficit"][i];
-        structure->evapotranspiration[i] = jsonDoc["hourly"]["evapotranspiration"][i];
+        //     structure->vapour_pressure_deficit[i] = jsonDoc["hourly"]["vapour_pressure_deficit"][i];
+        //     structure->evapotranspiration[i] = jsonDoc["hourly"]["evapotranspiration"][i];
         structure->lifted_index[i] = jsonDoc["hourly"]["lifted_index"][i];
         structure->convective_inhibition[i] = jsonDoc["hourly"]["convective_inhibition"][i];
         structure->precipitation_amount[i] = jsonDoc["hourly"]["precipitation"][i];
         structure->terrestrial_radiation[i] = jsonDoc["hourly"]["terrestrial_radiation"][i];
-        structure->global_tilted_irradiance[i] = jsonDoc["hourly"]["global_tilted_irradiance"][i];
-        structure->direct_normal_irradiance[i] = jsonDoc["hourly"]["direct_normal_irradiance"][i];
+        //     structure->global_tilted_irradiance[i] = jsonDoc["hourly"]["global_tilted_irradiance"][i];
+        //     structure->direct_normal_irradiance[i] = jsonDoc["hourly"]["direct_normal_irradiance"][i];
         structure->diffuse_radiation[i] = jsonDoc["hourly"]["diffuse_radiation"][i];
         structure->direct_radiation[i] = jsonDoc["hourly"]["direct_radiation"][i];
-        structure->shortwave_radiation[i] = jsonDoc["hourly"]["shortwave_radiation"][i];
+        //     structure->shortwave_radiation[i] = jsonDoc["hourly"]["shortwave_radiation"][i];
         structure->total_water_vapour[i] = jsonDoc["hourly"]["total_column_integrated_water_vapour"][i];
     }
     for (size_t i = 0; i < OM_WEATHER_MAX_DAYS; i++)
