@@ -60,7 +60,7 @@ typedef struct OM_HourlyForecast
     float diffuse_radiation[OM_WEATHER_MAX_HOURS] = {0};
     float direct_radiation[OM_WEATHER_MAX_HOURS] = {0};
     //    float shortwave_radiation[OM_WEATHER_MAX_HOURS] = {0};
-    float total_column_vapour[OM_WEATHER_MAX_HOURS] = {0};
+    float total_water_vapour[OM_WEATHER_MAX_HOURS] = {0};
 
     // Daily
     time_t daily_time[OM_WEATHER_MAX_DAYS] = {0};
