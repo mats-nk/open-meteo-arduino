@@ -46,22 +46,21 @@ typedef struct OM_HourlyForecast
     float uv_index_clear_sky[OM_WEATHER_MAX_HOURS] = {0};
 
     // even more info, prob too much? idk
-    float dew_point_2m[OM_WEATHER_MAX_HOURS] = {0};
-    float precipitation[OM_WEATHER_MAX_HOURS] = {0};
+    float dew_point[OM_WEATHER_MAX_HOURS] = {0};
     float snow_depth[OM_WEATHER_MAX_HOURS] = {0};
-    float vapour_pressure_deficit[OM_WEATHER_MAX_HOURS] = {0};
-    float evapotranspiration[OM_WEATHER_MAX_HOURS] = {0};
+    //    float vapour_pressure_deficit[OM_WEATHER_MAX_HOURS] = {0};
+    //    float evapotranspiration[OM_WEATHER_MAX_HOURS] = {0};
     float lifted_index[OM_WEATHER_MAX_HOURS] = {0};
     float convective_inhibition[OM_WEATHER_MAX_HOURS] = {0};
     float precipitation_amount[OM_WEATHER_MAX_HOURS] = {0};
 
     float terrestrial_radiation[OM_WEATHER_MAX_HOURS] = {0};
-    float global_tilted_irradiance[OM_WEATHER_MAX_HOURS] = {0};
-    float direct_normal_irradiance[OM_WEATHER_MAX_HOURS] = {0};
+    //    float global_tilted_irradiance[OM_WEATHER_MAX_HOURS] = {0};
+    //    float direct_normal_irradiance[OM_WEATHER_MAX_HOURS] = {0};
     float diffuse_radiation[OM_WEATHER_MAX_HOURS] = {0};
     float direct_radiation[OM_WEATHER_MAX_HOURS] = {0};
-    float shortwave_radiation[OM_WEATHER_MAX_HOURS] = {0};
-    float total_column_integrated_water_vapour[OM_WEATHER_MAX_HOURS] = {0};
+    //    float shortwave_radiation[OM_WEATHER_MAX_HOURS] = {0};
+    float total_column_vapour[OM_WEATHER_MAX_HOURS] = {0};
 
     // Daily
     time_t daily_time[OM_WEATHER_MAX_DAYS] = {0};
