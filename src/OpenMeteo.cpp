@@ -53,17 +53,33 @@ bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longi
         structure->wind_deg[i] = jsonDoc["hourly"]["wind_direction_10m"][i];
         structure->wind_gust[i] = jsonDoc["hourly"]["wind_gusts_10m"][i];
         structure->is_day[i] = jsonDoc["hourly"]["is_day"][i];
-        structure->wet_bulb_temperature_2m[i] = jsonDoc["hourly"]["wet_bulb_temperature_2m"][i]; // New
+
+        structure->wet_bulb_temperature_2m[i] = jsonDoc["hourly"]["wet_bulb_temperature_2m"][i];
         structure->cape[i] = jsonDoc["hourly"]["cape"][i];
-        structure->uv_index[i] = jsonDoc["hourly"]["uv_index"][i];                     // Add this
-        structure->uv_index_clear_sky[i] = jsonDoc["hourly"]["uv_index_clear_sky"][i]; // Add this
+        structure->uv_index[i] = jsonDoc["hourly"]["uv_index"][i];
+        structure->uv_index_clear_sky[i] = jsonDoc["hourly"]["uv_index_clear_sky"][i];
+
+        structure->dew_point[i] = jsonDoc["hourly"]["dew_point_2m"][i];
+        structure->snow_depth[i] = jsonDoc["hourly"]["snow_depth"][i];
+        structure->vapour_pressure_deficit[i] = jsonDoc["hourly"]["vapour_pressure_deficit"][i];
+        structure->evapotranspiration[i] = jsonDoc["hourly"]["evapotranspiration"][i];
+        structure->lifted_index[i] = jsonDoc["hourly"]["lifted_index"][i];
+        structure->convective_inhibition[i] = jsonDoc["hourly"]["convective_inhibition"][i];
+        structure->precipitation_probability[i] = jsonDoc["hourly"]["precipitation_probability"][i];
+        structure->terrestrial_radiation[i] = jsonDoc["hourly"]["terrestrial_radiation"][i];
+        structure->global_tilted_irradiance[i] = jsonDoc["hourly"]["global_tilted_irradiance"][i];
+        structure->direct_normal_irradiance[i] = jsonDoc["hourly"]["direct_normal_irradiance"][i];
+        structure->diffuse_radiation[i] = jsonDoc["hourly"]["diffuse_radiation"][i];
+        structure->direct_radiation[i] = jsonDoc["hourly"]["direct_radiation"][i];
+        structure->shortwave_radiation[i] = jsonDoc["hourly"]["shortwave_radiation"][i];
+        structure->total_water_vapour[i] = jsonDoc["hourly"]["total_column_integrated_water_vapour"][i];
     }
     for (size_t i = 0; i < OM_WEATHER_MAX_DAYS; i++)
     {
         structure->daily_time[i] = jsonDoc["daily"]["time"][i];
         structure->sunrise[i] = jsonDoc["daily"]["sunrise"][i];
         structure->sunset[i] = jsonDoc["daily"]["sunset"][i];
-        structure->sunshine_duration[i] = jsonDoc["daily"]["sunshine_duration"][i]; // New
+        structure->sunshine_duration[i] = jsonDoc["daily"]["sunshine_duration"][i];
     }
     return true;
 }
@@ -100,6 +116,22 @@ bool getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, flo
         structure->european_aqi_nitrogen_dioxide[i] = jsonDoc["hourly"]["european_aqi_nitrogen_dioxide"][i];
         structure->european_aqi_ozone[i] = jsonDoc["hourly"]["european_aqi_ozone"][i];
         structure->european_aqi_sulphur_dioxide[i] = jsonDoc["hourly"]["european_aqi_sulphur_dioxide"][i];
+
+        structure->pm2_5[i] = jsonDoc["hourly"]["pm2_5"][i];
+        structure->pm10[i] = jsonDoc["hourly"]["pm10"][i];
+        structure->carbon_monoxide[i] = jsonDoc["hourly"]["carbon_monoxide"][i];
+        structure->carbon_dioxide[i] = jsonDoc["hourly"]["carbon_dioxide"][i];
+        structure->nitrogen_dioxide[i] = jsonDoc["hourly"]["nitrogen_dioxide"][i];
+        structure->sulphur_dioxide[i] = jsonDoc["hourly"]["sulphur_dioxide"][i];
+        structure->ozone[i] = jsonDoc["hourly"]["ozone"][i];
+        structure->aerosol_optical_depth[i] = jsonDoc["hourly"]["aerosol_optical_depth"][i];
+        structure->dust[i] = jsonDoc["hourly"]["dust"][i];
+        structure->methane[i] = jsonDoc["hourly"]["methane"][i];
+        structure->formaldehyde[i] = jsonDoc["hourly"]["formaldehyde"][i];
+        structure->glyoxal[i] = jsonDoc["hourly"]["glyoxal"][i];
+        structure->sea_salt_aerosol[i] = jsonDoc["hourly"]["sea_salt_aerosol"][i];
+        structure->nitrogen_monoxide[i] = jsonDoc["hourly"]["nitrogen_monoxide"][i];
+        structure->peroxyacyl_nitrates[i] = jsonDoc["hourly"]["peroxyacyl_nitrates"][i];
     }
     return true;
 }

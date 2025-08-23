@@ -39,16 +39,35 @@ typedef struct OM_HourlyForecast
 
     bool is_day[OM_WEATHER_MAX_HOURS] = {0};
 
+    float wet_bulb_temperature_2m[OM_WEATHER_MAX_HOURS] = {0};
+    float cape[OM_WEATHER_MAX_HOURS] = {0};
+    float sunshine_duration[OM_WEATHER_MAX_DAYS] = {0};
+    float uv_index[OM_WEATHER_MAX_HOURS] = {0};
+    float uv_index_clear_sky[OM_WEATHER_MAX_HOURS] = {0};
+
+    // even more info, prob too much? idk
+    float dew_point_2m[OM_WEATHER_MAX_HOURS] = {0};
+    float precipitation[OM_WEATHER_MAX_HOURS] = {0};
+    float snow_depth[OM_WEATHER_MAX_HOURS] = {0};
+    float vapour_pressure_deficit[OM_WEATHER_MAX_HOURS] = {0};
+    float evapotranspiration[OM_WEATHER_MAX_HOURS] = {0};
+    float lifted_index[OM_WEATHER_MAX_HOURS] = {0};
+    float convective_inhibition[OM_WEATHER_MAX_HOURS] = {0};
+    float precipitation_probability[OM_WEATHER_MAX_HOURS] = {0};
+
+    float terrestrial_radiation[OM_WEATHER_MAX_HOURS] = {0};
+    float global_tilted_irradiance[OM_WEATHER_MAX_HOURS] = {0};
+    float direct_normal_irradiance[OM_WEATHER_MAX_HOURS] = {0};
+    float diffuse_radiation[OM_WEATHER_MAX_HOURS] = {0};
+    float direct_radiation[OM_WEATHER_MAX_HOURS] = {0};
+    float shortwave_radiation[OM_WEATHER_MAX_HOURS] = {0};
+    float total_column_integrated_water_vapour[OM_WEATHER_MAX_HOURS] = {0};
+
     // Daily
     time_t daily_time[OM_WEATHER_MAX_DAYS] = {0};
 
     uint32_t sunrise[OM_WEATHER_MAX_DAYS] = {0};
     uint32_t sunset[OM_WEATHER_MAX_DAYS] = {0};
-    float wet_bulb_temperature_2m[OM_WEATHER_MAX_HOURS] = {0}; // New field
-    float cape[OM_WEATHER_MAX_HOURS] = {0};                    // New field
-    float sunshine_duration[OM_WEATHER_MAX_DAYS] = {0};        // New field
-    float uv_index[OM_WEATHER_MAX_HOURS] = {0};                // Add this
-    float uv_index_clear_sky[OM_WEATHER_MAX_HOURS] = {0};      // Add this
 
 } OM_HourlyForecast;
 
@@ -122,13 +141,30 @@ typedef struct OM_AirQualityForecast
     uint16_t european_aqi_nitrogen_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
     uint16_t european_aqi_ozone[OM_AIR_QUALITY_MAX_HOURS] = {0};
     uint16_t european_aqi_sulphur_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+
+    float pm2_5[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float pm10[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float carbon_monoxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float carbon_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float nitrogen_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float sulphur_dioxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float ozone[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float aerosol_optical_depth[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float dust[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float methane[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float formaldehyde[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float glyoxal[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float sea_salt_aerosol[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float nitrogen_monoxide[OM_AIR_QUALITY_MAX_HOURS] = {0};
+    float peroxyacyl_nitrates[OM_AIR_QUALITY_MAX_HOURS] = {0};
+
 } OM_AirQualityForecast;
 
-#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day,wet_bulb_temperature_2m,cape,uv_index,uv_index_clear_sky&daily=sunrise,sunset,sunshine_duration&timeformat=unixtime&timezone=auto"
+#define HOURLY_API_LINK "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day,wet_bulb_temperature_2m,cape,uv_index,uv_index_clear_sky,dew_point_2m,precipitation,snow_depth,vapour_pressure_deficit,evapotranspiration,lifted_index,convective_inhibition,precipitation_probability,terrestrial_radiation,global_tilted_irradiance,direct_normal_irradiance,diffuse_radiation,direct_radiation,shortwave_radiation,total_column_integrated_water_vapour&daily=sunrise,sunset,sunshine_duration&timeformat=unixtime&timezone=auto"
 
 bool getHourlyForecast(OM_HourlyForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink = HOURLY_API_LINK);
 
-#define AIR_HOURLY_API_LINK "&hourly=european_aqi,european_aqi_pm2_5,european_aqi_pm10,us_aqi,european_aqi_nitrogen_dioxide,european_aqi_ozone,european_aqi_sulphur_dioxide&timeformat=unixtime&timezone=auto"
+#define AIR_HOURLY_API_LINK "&hourly=european_aqi,european_aqi_pm2_5,european_aqi_pm10,us_aqi,european_aqi_nitrogen_dioxide,european_aqi_ozone,european_aqi_sulphur_dioxide,pm2_5,pm10,carbon_monoxide,carbon_dioxide,nitrogen_dioxide,sulphur_dioxide,ozone,aerosol_optical_depth,dust,methane,formaldehyde,glyoxal,sea_salt_aerosol,nitrogen_monoxide,peroxyacyl_nitrates&timeformat=unixtime&timezone=auto"
 
 bool getAirQualityForecast(OM_AirQualityForecast *structure, float latitude, float longitude, uint64_t unixTime, String apiLink = AIR_HOURLY_API_LINK);
 
