@@ -29,6 +29,8 @@ This is the default values for Open Meteo API
 - ```getAirQualityForecast```
 
 ### ```getHourlyForecast```
+
+For details read https://open-meteo.com/en/docs
 - Temp
 - Humidity
 - Apparent_Temp
@@ -57,6 +59,9 @@ This is the default values for Open Meteo API
 - Direct_Radiation
 
 ### ```getAirQualityForecast```
+
+For details read https://open-meteo.com/en/docs/air-quality-api
+
 - European_Aqi
 - Us_Aqi
 - European_Aqi_Pm2_5
