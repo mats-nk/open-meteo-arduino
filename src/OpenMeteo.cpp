@@ -1,6 +1,12 @@
 #include "OpenMeteo.h"
 #include <Arduino.h>
+
+#if defined(ARDUINO_ARCH_ESP32)        // --- ESP32 ---
 #include <WiFi.h>
+#elif defined(ESP8266)                 // --- ESP8266 ---
+#include <ESP8266WiFi.h>
+#endif
+
 #include <time.h>
 #include <TimeLib.h>
 
@@ -251,7 +257,12 @@ String getStringRequest(String url)
 
     http.begin(client, url);
     http.setTimeout(17500);
+
+#if defined (ARDUINO_ARCH_ESP8266)
+//    http.setConnectTimeout(17500);
+#elif defined(ESP32)
     http.setConnectTimeout(17500);
+#endif
 
     // Error codes are here: /home/szybet/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src/HTTPClient.h
     int httpResponseCode = http.GET();
