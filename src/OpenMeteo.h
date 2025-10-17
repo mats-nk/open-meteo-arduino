@@ -2,7 +2,12 @@
 #define OPENMETEO_H
 
 #include <ArduinoJson.h>
+
+#if defined(ARDUINO_ARCH_ESP32)        // --- ESP32 ---
 #include <HTTPClient.h>
+#elif defined(ESP8266)                 // --- ESP8266 ---
+#include <ESP8266HTTPClient.h>
+#endif
 
 #define OM_WEATHER_MAX_DAYS 1
 #define OM_WEATHER_MAX_HOURS OM_WEATHER_MAX_DAYS * 24
